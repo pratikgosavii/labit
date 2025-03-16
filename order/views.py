@@ -39,16 +39,50 @@ def apply_coupon(cart_total, coupon_code):
 
 from django.contrib.contenttypes.models import ContentType
 
-def add_to_cart(user, item):
-    content_type = ContentType.objects.get_for_model(item)
-    cart_item, created = cart.objects.get_or_create(user=user, content_type=content_type, object_id=item.id)
-    
-    if not created:
-        cart_item.quantity += 1
-        cart_item.save()
-    
-    return cart_item
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.contenttypes.models import ContentType
+from .models import cart
+from .serializers import cartserializer
 
+class AddToCartView(APIView):
+
+
+    def post(self, request):
+        
+        user = request.user
+        item_type = request.data.get('type')  # "test" or "medicine"
+        object_id = request.data.get('object_id')  # ID of test or medicine
+
+        if item_type == "test":
+            item = test.objects.filter(id=object_id).first()
+            if not item:
+                return Response({"error": "Test not found"}, status=400)
+
+            cart_item, created = cart.objects.get_or_create(
+                user=user, type="test", test=item,
+                defaults={'quantity': 1}
+            )
+        elif item_type == "medicine":
+            item = medicine.objects.filter(id=object_id).first()
+            if not item:
+                return Response({"error": "Medicine not found"}, status=400)
+
+            cart_item, created = cart.objects.get_or_create(
+                user=user, type="medicine", medicine=item,
+                defaults={'quantity': 1}
+            )
+        else:
+            return Response({"error": "Invalid type"}, status=400)
+
+        # If item already exists, increment quantity by 1
+        if not created:
+            cart_item.quantity += 1
+            cart_item.save()
+
+
+        return Response(cartserializer(cart).data, status=201)
 
 def get_cart_items(user):
     cart_items = cart.objects.filter(user=user)
