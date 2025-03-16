@@ -103,7 +103,7 @@ def list_doctor(request):
 
 
 from django.http import JsonResponse
-@login_required(login_url='login')
+
 def get_doctor(request):
 
     data = list(doctor.objects.values())  # ✅ Converts QuerySet to a list of dictionaries
@@ -196,7 +196,7 @@ def list_test(request):
 
 
 from django.http import JsonResponse
-@login_required(login_url='login')
+
 def get_test(request):
 
     data = list(test.objects.values())  # ✅ Converts QuerySet to a list of dictionaries
@@ -277,7 +277,7 @@ def list_lab(request):
 
 
 from django.http import JsonResponse
-@login_required(login_url='login')
+
 def get_lab(request):
 
     data = list(lab.objects.values())  # ✅ Converts QuerySet to a list of dictionaries
@@ -358,7 +358,7 @@ def list_coupon(request):
 
 
 from django.http import JsonResponse
-@login_required(login_url='login')
+
 def get_coupon(request):
 
     data = list(coupon.objects.values())  # ✅ Converts QuerySet to a list of dictionaries
@@ -439,7 +439,7 @@ def list_medicine_category(request):
 
 
 from django.http import JsonResponse
-@login_required(login_url='login')
+
 def get_medicine_category(request):
 
     data = list(medicine_category.objects.values())  # ✅ Converts QuerySet to a list of dictionaries
@@ -520,7 +520,7 @@ def list_medicine(request):
 
 
 from django.http import JsonResponse
-@login_required(login_url='login')
+
 def get_medicine(request):
 
     data = list(medicine.objects.values())  # ✅ Converts QuerySet to a list of dictionaries
