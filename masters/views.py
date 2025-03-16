@@ -45,6 +45,24 @@ def add_doctor(request):
         }
         return render(request, 'add_doctor.html', context)
 
+
+from django.views.decorators.csrf import csrf_exempt
+
+@login_required(login_url='login')
+@csrf_exempt 
+def add_doctor_json(request):
+
+    if request.method == 'POST':
+        form = doctor_Form(request.POST, request.FILES)
+        
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'status': 'success', 'message': 'Doctor added successfully'}, status=201)
+        else:
+            return JsonResponse({'status': 'error', 'errors': form.errors}, status=400)
+    
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
+
         
 
 @login_required(login_url='login')
