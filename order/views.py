@@ -50,50 +50,64 @@ class AddToCartView(APIView):
 
 
     def post(self, request):
+        try:
+            # Fetch user instance (use request.user if authenticated)
+            user_instance = User.objects.get(id=1)  
+
+            item_type = request.data.get('type')  # Use request.data for JSON support
+            object_id = request.data.get('object_id')
+
+            if not object_id or not item_type:
+                return Response({"error": "Missing required fields"}, status=400)
+
+            object_id = int(object_id)
+
+            if item_type == "test":
+                item = test.objects.filter(id=object_id).first()
+                if not item:
+                    return Response({"error": "Test not found"}, status=400)
+
+                cart_item, created = cart.objects.get_or_create(
+                    user=user_instance, type="test", test=item,
+                    defaults={'quantity': 1}
+                )
+
+            elif item_type == "medicine":
+                item = medicine.objects.filter(id=object_id).first()
+                if not item:
+                    return Response({"error": "Medicine not found"}, status=400)
+
+                cart_item, created = cart.objects.get_or_create(
+                    user=user_instance, type="medicine", medicine=item,
+                    defaults={'quantity': 1}
+                )
+
+            else:
+                return Response({"error": "Invalid type"}, status=400)
+
+            # If item already exists, increment quantity by 1
+            if not created:
+                cart_item.quantity += 1
+                cart_item.save()
+
+            return Response(cartserializer(cart_item).data, status=201)
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=500)
         
-        user = request.user
-        item_type = request.data.get('type')  # "test" or "medicine"
-        object_id = request.data.get('object_id')  # ID of test or medicine
-
-        if item_type == "test":
-            item = test.objects.filter(id=object_id).first()
-            if not item:
-                return Response({"error": "Test not found"}, status=400)
-
-            cart_item, created = cart.objects.get_or_create(
-                user=user, type="test", test=item,
-                defaults={'quantity': 1}
-            )
-        elif item_type == "medicine":
-            item = medicine.objects.filter(id=object_id).first()
-            if not item:
-                return Response({"error": "Medicine not found"}, status=400)
-
-            cart_item, created = cart.objects.get_or_create(
-                user=user, type="medicine", medicine=item,
-                defaults={'quantity': 1}
-            )
-        else:
-            return Response({"error": "Invalid type"}, status=400)
-
-        # If item already exists, increment quantity by 1
-        if not created:
-            cart_item.quantity += 1
-            cart_item.save()
 
 
-        return Response(cartserializer(cart).data, status=201)
 
-def get_cart_items(user):
-    cart_items = cart.objects.filter(user=user)
-    
-    medicine_items = []
-    test_items = []
+class get_cart_items(APIView):
 
-    for item in cart_items:
-        if item.content_type.model == "medicine":
-            medicine_items.append(item)
-        elif item.content_type.model == "test":
-            test_items.append(item)
+    def get(self, request):
 
-    return {'medicines': medicine_items, 'tests': test_items}
+        cart_items = cart.objects.filter(user__id=1)
+        
+        medicine_items = []
+        test_items = []
+
+        medicine_items = [cartserializer(item).data for item in cart_items if item.type == "medicine"]
+        test_items = [cartserializer(item).data for item in cart_items if item.type == "test"]
+
+        return Response({'medicines': medicine_items, 'tests': test_items}, status=200)
