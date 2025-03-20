@@ -108,6 +108,7 @@
                                                 <tr>
                                                     <th>#</th>
                                                     <th>Code</th>
+                                                    <th>Description</th>
                                                     <th>Discount (%)</th>
                                                     <th>Discount Amount</th>
                                                     <th>Min Purchase</th>
@@ -124,6 +125,7 @@
                                                         <tr>
                                                             <td>{{ forloop.counter }}</td>
                                                             <td>{{ i.code }}</td>
+                                                            <td>{{ i.description }}</td>
                                                             <td>{{ i.discount_percentage|default:"-" }}%</td>
                                                             <td>₹{{ i.discount_amount|default:"-" }}</td>
                                                             <td>₹{{ i.min_purchase }}</td>
