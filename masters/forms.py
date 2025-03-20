@@ -68,6 +68,22 @@ class doctor_Form(forms.ModelForm):
 
 
 
+class testimonials_Form(forms.ModelForm):
+    class Meta:
+        model = testimonials
+        fields = '__all__'
+        widgets = {
+           
+            'name': forms.TextInput(attrs={
+                'class': 'form-control', 'id': 'name'
+            }),
+          
+            'description': forms.TextInput(attrs={
+                'class': 'form-control', 'id': 'price'
+            }),
+
+        }
+
 class test_Form(forms.ModelForm):
     class Meta:
         model = test

@@ -544,3 +544,93 @@ def get_medicine(request):
     data = list(medicine.objects.values())  # ✅ Converts QuerySet to a list of dictionaries
     return JsonResponse({'data': data})
 
+
+
+
+from .models import *
+
+
+def add_testimonials(request):
+    
+    if request.method == "POST":
+
+        description = request.POST.get('description')
+        name = request.POST.get('name')
+
+        print(description)
+        print(name)
+
+        instance = testimonials.objects.create(description = description, name = name)
+        instance.save()
+
+        return redirect('list_testimonials')
+    
+    else:
+
+        # create first row using admin then editing only
+
+        
+
+        return render(request, 'add_testimonials.html', { 'form' : testimonials_Form()})
+
+def update_testimonials(request, testimonials_id):
+    
+    instance = testimonials.objects.get(id = testimonials_id)
+
+    if request.method == "POST":
+
+        description = request.POST.get('description')
+        name = request.POST.get('name')
+
+        print(description)
+        print(name)
+
+        instance.description = description
+        instance.name = name
+        instance.save()
+
+        return redirect('list_testimonials')
+    
+    else:
+
+        # create first row using admin then editing only
+
+        
+
+        return render(request, 'add_testimonials.html', {'data' : instance})
+
+
+def list_testimonials(request):
+
+    data = testimonials.objects.all()
+
+    return render(request, 'list_testimonials.html', {'data' : data})
+
+
+def delete_testimonials(request, testimonials_id):
+
+    data = testimonials.objects.get(id = testimonials_id).delete()
+
+    return redirect('list_testimonials')
+
+
+from django.views import View
+
+
+def get_testimonials(request):
+  
+    data = testimonials.objects.all()  # Assuming Testimonials is the model name
+
+    if not data.exists():
+        return JsonResponse({"error": "No data found"}, status=404)
+
+    response_data = []
+    for testimonial in data:
+        temp = {
+            "id": testimonial.id,
+            "name": testimonial.name,
+            "description": testimonial.description,
+        }
+        response_data.append(temp)
+
+    return JsonResponse({"data": response_data}, status=200)

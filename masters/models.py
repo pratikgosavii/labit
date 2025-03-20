@@ -104,3 +104,13 @@ class medicine(models.Model):
 
     def __str__(self):
         return f"{self.name} - ₹{self.price}"
+
+
+
+
+class testimonials(models.Model):
+
+    
+    name = models.CharField(max_length=100)  # Field for time slots
+    description = models.CharField(max_length=500)  # Field for time slots
+

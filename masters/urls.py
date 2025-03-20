@@ -46,6 +46,14 @@ urlpatterns = [
     path('get-medicine/', get_medicine, name='get_medicine'),
 
 
+    path('add-testimonials/', add_testimonials, name='add_testimonials'),  # create or fetch list of admins
+    path('update-testimonials/<testimonials_id>', update_testimonials, name='update_testimonials'),  # create or fetch list of admins
+    path('list-testimonials/', list_testimonials, name='list_testimonials'),  # create or fetch list of admins
+    path('delete-testimonials/<testimonials_id>', delete_testimonials, name='delete_testimonials'),  # create or fetch list of admins
+    path('get-testimonials/', get_testimonials, name='get_testimonials'), 
+
+
+
 
 
 ] 
