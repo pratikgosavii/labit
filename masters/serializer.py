@@ -7,3 +7,6 @@ class HomeBannerSerializer(serializers.ModelSerializer):
     class Meta:
         model = home_banner
         fields = '__all__' 
+
+
+

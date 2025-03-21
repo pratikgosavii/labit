@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'users',
     'masters',
     'order',
-    'lab'
+    'lab',
+    'pharmacy',
 ]
 
 MIDDLEWARE = [

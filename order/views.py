@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.http import JsonResponse
+from django.shortcuts import redirect, render
 
 # Create your views here.
 
@@ -154,3 +155,71 @@ class get_order(APIView):
 
         serializer = order_serializer(orders, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+from .forms import *
+
+
+def update_order(request, order_id):
+
+    if request.method == 'POST':
+
+        instance = order.objects.get(id=order_id)
+
+        forms = order_Form(request.POST, request.FILES, instance=instance)
+
+        if forms.is_valid():
+            forms.save()
+            return redirect('list_order', order_type = 'test')
+        else:
+
+            context = {
+                'form': forms
+            }
+
+            return render(request, 'order/update_order.html', context)
+    
+    else:
+
+        instance = order.objects.get(id=order_id)
+        forms = order_Form(instance=instance)
+
+        context = {
+            'form': forms
+        }
+        return render(request, 'order/update_order.html', context)
+
+
+def list_order(request, order_type):
+
+    data = order.objects.filter(type = order_type)
+
+    context = {
+        'data': data
+    }
+
+    
+    return render(request, 'order/list_order.html', context)
+
+
+def show_orders_from_pharmacy(request, order_type):
+
+    data = order.objects.filter(pharmacy != None, type=order_type).values()  # Convert queryset to list of dicts
+    
+    return JsonResponse(list(data), safe=False)
+
+
+def get_orders_from_pharmacy(request):
+
+    # data = order.objects.filter(type=order_type).values()  # Convert queryset to list of dicts
+    
+    # return JsonResponse(list(data), safe=False)
+
+    
+def your_order_labbotomist(request, order_type):
+
+    labbotomist_instance = labbotomist_details.objects.get(id = 1)
+
+    data = order.objects.filter(type=order_type, labbotomist = labbotomist_instance).values()  # Convert queryset to list of dicts
+    
+    return JsonResponse(list(data), safe=False)

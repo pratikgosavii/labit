@@ -6,6 +6,8 @@ from django.db import models
 from django.db import models
 from users.models import User
 from masters.models import *
+from lab.models import *
+from pharmacy.models import *
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
@@ -41,6 +43,8 @@ class order(models.Model):
     type = models.CharField(max_length=10, choices=TYPE_CHOICES)  # Differentiates Test & Medicine orders
     test = models.ForeignKey(test, on_delete=models.SET_NULL, null=True, blank=True)  # Optional for test orders
     medicine = models.ForeignKey(medicine, on_delete=models.SET_NULL, null=True, blank=True)  # Optional for medicine orders
+    labbotomist = models.ForeignKey(labbotomist_details, on_delete=models.SET_NULL, null=True, blank=True)  # Optional for medicine orders
+    pharmacy = models.ForeignKey(pharmacy, on_delete=models.SET_NULL, null=True, blank=True)  # Optional for medicine orders
     quantity = models.PositiveIntegerField(default=1)  # Only applicable for medicine orders
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     payment_status = models.CharField(max_length=20, choices=[('pending', 'Pending'), ('paid', 'Paid')], default='pending')
