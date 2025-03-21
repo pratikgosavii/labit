@@ -52,6 +52,12 @@ urlpatterns = [
     path('delete-testimonials/<testimonials_id>', delete_testimonials, name='delete_testimonials'),  # create or fetch list of admins
     path('get-testimonials/', get_testimonials, name='get_testimonials'), 
 
+    path('add-home-banner/', add_home_banner, name='add_home_banner'),  # create or fetch list of admins
+    path('update-home-banner/<home_banner_id>', update_home_banner, name='update_home_banner'),  # create or fetch list of admins
+    path('list-home-banner/', list_home_banner, name='list_home_banner'),  # create or fetch list of admins
+    path('delete-home-banner/<home_banner_id>', delete_home_banner, name='delete_home_banner'),  # create or fetch list of admins
+    path('get-home-banner/', get_home_banner, name='get_home_banner'), 
+
 
 
 

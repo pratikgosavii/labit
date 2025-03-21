@@ -94,8 +94,17 @@ class test_Form(forms.ModelForm):
                 'class': 'form-control', 'id': 'name'
             }),
           
-            'price': forms.NumberInput(attrs={
-                'class': 'form-control', 'id': 'price'
+
+            'b2b_min_price': forms.NumberInput(attrs={
+                'class': 'form-control', 'id': 'b2b_min_price'
+            }),
+
+            'b2b_max_price': forms.NumberInput(attrs={
+                'class': 'form-control', 'id': 'b2b_max_price'
+            }),
+
+            'mrp': forms.NumberInput(attrs={
+                'class': 'form-control', 'id': 'mrp'
             }),
 
             
@@ -103,8 +112,8 @@ class test_Form(forms.ModelForm):
             
             'rating': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.1'}),
             
-            'remark': forms.TextInput(attrs={
-                'class': 'form-control', 'id': 'remark'
+            'description': forms.TextInput(attrs={
+                'class': 'form-control', 'id': 'description'
             }),
             
             'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input', 'id': 'is_active'}),
@@ -200,3 +209,29 @@ class medicine_Form(forms.ModelForm):
                 'class': 'form-check-input', 'id': 'prescription_required'
             }),
         }
+
+
+
+
+
+
+class home_banner_Form(forms.ModelForm):
+    class Meta:
+        model = home_banner
+        fields = '__all__'
+        widgets = {
+           
+            'title': forms.TextInput(attrs={
+                'class': 'form-control', 'id': 'title'
+            }),
+          
+            'description': forms.TextInput(attrs={
+                'class': 'form-control', 'id': 'price'
+            }),
+
+            'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+
+            'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+
+        }
+

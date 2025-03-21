@@ -52,9 +52,12 @@ class test(models.Model):
 
     name = models.CharField(max_length=120, unique=False)
     image = models.ImageField(upload_to='doctor_images/')
-    price = models.IntegerField(null = True, blank = True)
     rating = models.DecimalField(max_digits=3, decimal_places=1, null = True, blank = True)
-    remark = models.CharField(max_length=120, unique=False, null = True, blank = True)
+    description = models.CharField(max_length=120, unique=False, null = True, blank = True)
+    
+    b2b_min_price = models.IntegerField()
+    b2b_max_price = models.IntegerField()
+    mrp = models.IntegerField()
     is_active = models.BooleanField(default = True)
 
     
@@ -110,8 +113,19 @@ class medicine(models.Model):
 
 
 class testimonials(models.Model):
-
     
     name = models.CharField(max_length=100)  # Field for time slots
     description = models.CharField(max_length=500)  # Field for time slots
+    
 
+
+
+class home_banner(models.Model):
+    title = models.CharField(max_length=225, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    image = models.ImageField(upload_to='homeBanners/')
+    is_active = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title

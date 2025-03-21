@@ -109,40 +109,36 @@
                                 </ul>
                             </li>
                         <li>
-
-
+                            
                         <li>
-                            <a href="javascript: void(0);" class="has-arrow">
-                                <i data-feather="layers"></i>
-                                <span data-key="t-authentication">Homepage</span>
-                            </a>
-                            <ul class="sub-menu" aria-expanded="false">
-                                <li class="dropdown">
-                                    <a href="javascript:void(0);" class="has-arrow">Main Banner</a>
-                                    <!-- Nested sub-menu for Main Banner -->
-                                    <ul class="metismenu list-unstyled" id="side-menu">
-                                        <li>
-                                            <a href="/api/homePage/homeBanner/create/">Add Main Banner</a>
-                                        </li>
-                                        <li>
-                                            <a href="/api/homePage/homeBanner/get/">Main Banners List</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="dropdown">
-                                    <a href="javascript:void(0);" class="has-arrow">Sections</a>
-                                    <!-- Nested sub-menu for Main Banner -->
-                                    <ul class="metismenu list-unstyled" id="side-menu">
-                                        <li>
-                                            <a href="/api/homePage/homeSection/create/">Add Section</a>
-                                        </li>
-                                        <li>
-                                            <a href="/api/homePage/homeSection/get/">Sections List</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
+                            <li>
+                                <a href="javascript: void(0);" class="has-arrow">
+                                    <i data-feather="layers"></i>
+                                    <span data-key="t-authentication">Home Banner</span>
+                                </a>
+                                <ul class="sub-menu" aria-expanded="false">
+                                    <li><a href="{% url 'add_home_banner' %}">Add Home Banner</a></li>
+                                    <li><a href="{% url 'list_home_banner' %}">Home Banner List</a></li>
+                                </ul>
+                            </li>
+                        <li>
+                            
+                            
+                        <li>
+                            <li>
+                                <a href="javascript: void(0);" class="has-arrow">
+                                    <i data-feather="layers"></i>
+                                    <span data-key="t-authentication">Labbotomist</span>
+                                </a>
+                                <ul class="sub-menu" aria-expanded="false">
+                                    <li><a href="{% url 'add_labbotomist' %}">Add Labbotomist</a></li>
+                                    <li><a href="{% url 'list_labbotomists' %}">Labbotomist List</a></li>
+                                </ul>
+                            </li>
+                        <li>
+
+
+                        
 
                         
                         <!-- <li>

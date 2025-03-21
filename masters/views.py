@@ -262,7 +262,12 @@ def update_lab(request, lab_id):
             forms.save()
             return redirect('list_lab')
         else:
-            print(forms.errors)
+
+            context = {
+                'form': forms
+            }
+
+            return render(request, 'add_lab.html', context)
     
     else:
 
@@ -344,6 +349,12 @@ def update_coupon(request, coupon_id):
             return redirect('list_coupon')
         else:
             print(forms.errors)
+
+            context = {
+                'form': forms
+            }
+
+            return render(request, 'add_coupon.html', context)
     
     else:
 
@@ -425,6 +436,12 @@ def update_medicine_category(request, medicine_category_id):
             return redirect('list_medicine_category')
         else:
             print(forms.errors)
+
+            context = {
+                'form': forms
+            }
+
+            return render(request, 'add_medicine_category.html', context)
     
     else:
 
@@ -505,7 +522,12 @@ def update_medicine(request, medicine_id):
             forms.save()
             return redirect('list_medicine')
         else:
-            print(forms.errors)
+
+            context = {
+                'form': forms
+            }
+
+            return render(request, 'add_medicine.html', context)
     
     else:
 
@@ -634,3 +656,86 @@ def get_testimonials(request):
         response_data.append(temp)
 
     return JsonResponse({"data": response_data}, status=200)
+
+def add_home_banner(request):
+    
+    if request.method == "POST":
+
+        forms = home_banner_Form(request.POST, request.FILES)
+
+        if forms.is_valid():
+            forms.save()
+            return redirect('list_home_banner')
+        else:
+            print(forms.errors)
+            context = {
+                'form': forms
+            }
+
+            return render(request, 'add_home_banner.html', context)
+    
+    else:
+
+        # create first row using admin then editing only
+
+        
+
+        return render(request, 'add_home_banner.html', { 'form' : home_banner_Form()})
+
+def update_home_banner(request, home_banner_id):
+    
+    instance = home_banner.objects.get(id = home_banner_id)
+
+    if request.method == "POST":
+
+
+        instance = home_banner.objects.get(id=home_banner_id)
+
+        forms = home_banner_Form(request.POST, request.FILES, instance=instance)
+
+        if forms.is_valid():
+            forms.save()
+            return redirect('list_home_banner')
+        else:
+            print(forms.errors)
+            context = {
+                'form': forms
+            }
+
+            return render(request, 'add_home_banner.html', context)
+
+    
+    else:
+
+        # create first row using admin then editing only
+
+        
+
+        return render(request, 'add_home_banner.html', {'data' : instance})
+
+
+def list_home_banner(request):
+
+    data = home_banner.objects.all()
+
+    return render(request, 'list_home_banner.html', {'data' : data})
+
+
+def delete_home_banner(request, home_banner_id):
+
+    data = home_banner.objects.get(id = home_banner_id).delete()
+
+    return redirect('list_home_banner')
+
+
+from django.views import View
+from .serializer import *
+
+def get_home_banner(request):
+  
+    data = home_banner.objects.all()  # Assuming home_banner is the model name
+
+
+    serialized_data = HomeBannerSerializer(data, many=True).data  
+
+    return JsonResponse({"data": serialized_data}, status=200, safe=False)  

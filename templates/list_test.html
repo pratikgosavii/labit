@@ -108,7 +108,10 @@
                                             <tr>
                                                 <th>#</th>
                                                 <th>Name</th>
-                                                <th>Price</th>
+                                                <th>B2B Min Price</th>
+                                                <th>B2B Max Price</th>
+                                                <th>MRP</th>
+                                                <th>Description</th>
                                                 <th>Action</th>
                                             </tr>
                                             </thead>
@@ -118,7 +121,10 @@
                                                 <tr>
                                                     <td>{{ forloop.counter }}</td>
                                                     <td>{{ i.name }}</td>
-                                                    <td>{{ i.price }}</td>
+                                                    <td>{{ i.b2b_min_price }}</td>
+                                                    <td>{{ i.b2b_max_price }}</td>
+                                                    <td>{{ i.mrp }}</td>
+                                                    <td>{{ i.description }}</td>
                                                   
                                                     <td>
                                                         <!-- remove Button -->

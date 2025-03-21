@@ -111,3 +111,46 @@ class get_cart_items(APIView):
         test_items = [cartserializer(item).data for item in cart_items if item.type == "test"]
 
         return Response({'medicines': medicine_items, 'tests': test_items}, status=200)
+
+
+from .serializers import *
+
+class add_order(APIView):
+    def post(self, request, *args, **kwargs):
+        data = request.data.copy()
+
+        serializer = order_serializer(data=data)
+        if serializer.is_valid():
+            order = serializer.save()
+
+            # Payment Integration (Dummy Example)
+            payment_status = "paid"  # Assume payment success for demo
+            transaction_id = "TXN123456789"  # Dummy transaction ID
+            
+            # Update payment details
+            order.payment_status = payment_status
+            order.transaction_id = transaction_id
+            order.save()
+
+            return Response({"message": "Order placed successfully!", "order_id": order.id}, status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+
+class get_order(APIView):
+
+    def get(self, request, *args, **kwargs):
+        user_id = request.GET.get("user")  # Get user ID from query params
+        order_type = request.GET.get("type")  # Get order type from query params
+
+        orders = order.objects.all()
+
+        if user_id:
+            orders = orders.filter(user_id=user_id)
+
+        if order_type:
+            orders = orders.filter(type=order_type)
+
+        serializer = order_serializer(orders, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
