@@ -5,3 +5,4 @@ from .models import *
 
 
 admin.site.register(doctor)
+admin.site.register(lab)

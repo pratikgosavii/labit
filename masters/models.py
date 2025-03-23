@@ -37,7 +37,10 @@ class doctor(models.Model):
 
 class lab(models.Model):
 
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="labbotomist_detsdsdsdails")
     name = models.CharField(max_length=120, unique=False)
+    email = models.EmailField(max_length=255, unique=True)  # Added email field
+    lab_name = models.CharField(max_length=120, unique=False)
     image = models.ImageField(upload_to='doctor_images/')
     rating = models.DecimalField(max_digits=3, decimal_places=1, null = True, blank = True)
     remark = models.CharField(max_length=120, unique=False, null = True, blank = True)

@@ -53,10 +53,16 @@ class LoginView(APIView):
         email = request.data.get("email")
         password = request.data.get("password")
 
+        # Check if user exists and is a customer
         user = authenticate(username=email, password=password)
+
         if user is None:
             return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
 
+        if not user.is_customer:  # Check if `is_customer` is True
+            return Response({"error": "Access denied. Not a customer."}, status=status.HTTP_403_FORBIDDEN)
+
+        # Generate JWT tokens
         refresh = RefreshToken.for_user(user)
         return Response({
             "access": str(refresh.access_token),

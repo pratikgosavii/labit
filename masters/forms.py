@@ -14,6 +14,10 @@ class doctor_Form(forms.ModelForm):
                 'class': 'form-control', 'id': 'name'
             }),
            
+            'lab_name': forms.TextInput(attrs={
+                'class': 'form-control', 'id': 'lab_name'
+            }),
+           
             'degree': forms.TextInput(attrs={
                 'class': 'form-control', 'id': 'degree'
             }),
@@ -123,30 +127,44 @@ class test_Form(forms.ModelForm):
 
 
 class lab_Form(forms.ModelForm):
+
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter Email'}),
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Enter Password'}),
+        required=False  # Allow keeping the existing password on update
+    )
+
     class Meta:
         model = lab
-        fields = '__all__'
+        fields = ['email', 'password', 'name', 'image', 'lab_name', 'rating', 'remark', 'is_active']
         widgets = {
-           
-            'name': forms.TextInput(attrs={
-                'class': 'form-control', 'id': 'name'
-            }),
-          
+            'name': forms.TextInput(attrs={'class': 'form-control', 'id': 'name'}),
             'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-            
             'rating': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.1'}),
-            
-            'remark': forms.TextInput(attrs={
-                'class': 'form-control', 'id': 'remark'
-            }),
-            
+            'remark': forms.TextInput(attrs={'class': 'form-control', 'id': 'remark'}),
             'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input', 'id': 'is_active'}),
-            
         }
 
+    def save(self, commit=True):
+        email = self.cleaned_data['email']
+        password = self.cleaned_data['password']
 
+        user, created = User.objects.get_or_create(email=email, username=email, defaults={'username': email, 'is_vendor': True})
+        if password:
+            user.set_password(password)
+            user.save()
 
-  
+        # Now save the lab entry with the linked user
+        lab_entry = super().save(commit=False)
+        lab_entry.user = user  # Ensure email is saved in lab model
+
+        if commit:
+            lab_entry.save()
+        return lab_entry
+    
+    
 
 
 class coupon_Form(forms.ModelForm):

@@ -22,8 +22,8 @@
                                 <form method="post">
                                     {% csrf_token %}
                                     <div class="mb-3">
-                                        <label class="form-label">Username</label>
-                                        {{ form.username }}
+                                        <label class="form-label">Email</label>
+                                        {{ form.email }}
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">Password</label>
@@ -37,6 +37,11 @@
                                         <label class="form-label">Mobile No</label>
                                         {{ form.mobile_no }}
                                     </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Only Delivery</label>
+                                        {{ form.only_delivery }}
+                                    </div>
+                                    
                                     <div class="mb-3">
                                         <label class="form-label">Address</label>
                                         {{ form.address }}

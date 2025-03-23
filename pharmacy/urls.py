@@ -15,6 +15,8 @@ urlpatterns = [
     path('delete-pharmacy/<int:pharmacy_id>/', delete_pharmacy, name='delete_pharmacy'),
     path('get-pharmacy/', get_pharmacy, name='get_pharmacy'),
 
+    path('login-pharmacy/', pharmacy_login.as_view(), name='login_pharmacy'),
+    path('signup-pharmacy/', pharmacy_signup.as_view(), name='signup_pharmacy'),
 
 ] 
 

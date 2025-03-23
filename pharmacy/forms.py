@@ -12,10 +12,10 @@ from django.contrib.admin.widgets import  AdminDateWidget, AdminTimeWidget, Admi
 
 class pharmacy_Form(forms.ModelForm):
 
-    username = forms.CharField(
-        max_length=150,
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Username'}),
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter Email'}),
     )
+
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Enter Password'}),
         required=False  # Allow keeping existing password on update
@@ -23,7 +23,7 @@ class pharmacy_Form(forms.ModelForm):
 
     class Meta:
         model = pharmacy
-        fields = ['username', 'password', 'owner_full_name', 'pharmacy_name', 'mobile_no', 'address']
+        fields = ['password', 'owner_full_name', 'pharmacy_name', 'mobile_no', 'address']
         widgets = {
             'owner_full_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Full Name'}),
             'pharmacy_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Full Name'}),
@@ -33,10 +33,10 @@ class pharmacy_Form(forms.ModelForm):
 
     def save(self, commit=True):
         # Create User first
-        username = self.cleaned_data['username']
+        email = self.cleaned_data['email']
         password = self.cleaned_data['password']
 
-        user, created = User.objects.get_or_create(username=username)
+        user, created = User.objects.get_or_create(email=email, is_pharmassist=True, username=email)
         if password:
             user.set_password(password)
             user.save()

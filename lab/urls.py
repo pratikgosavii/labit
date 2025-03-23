@@ -8,11 +8,15 @@ from django.conf.urls.static import static
 urlpatterns = [
 
 
+    path('login-lab/', lab_login.as_view(), name='login_lab'),
+    path('signup-lab/', lab_signup.as_view(), name='signup_lab'),
+
     path('add-lab-tests/', add_lab_tests, name='add_lab_tests'),
     path('get-lab-tests/', get_lab_tests, name='get_lab_tests'),
 
 
-    path('create-labbotomist/', CreateLabbotomistView.as_view(), name='create_labbotomist'),
+    path('signup-labbotomist/', CreateLabbotomistView.as_view(), name='signup_labbotomist'),
+    path('login-labbotomist/', labbotomist_login.as_view(), name='signup_labbotomist'),
     path('update-labbotomist-json/<int:pk>/', UpdateLabbotomistView.as_view(), name='update_labbotomist'),
 
 

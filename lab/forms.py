@@ -12,9 +12,8 @@ from django.contrib.admin.widgets import  AdminDateWidget, AdminTimeWidget, Admi
 
 class labbotomist_details_Form(forms.ModelForm):
 
-    username = forms.CharField(
-        max_length=150,
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Username'}),
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter Email'}),
     )
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Enter Password'}),
@@ -23,7 +22,7 @@ class labbotomist_details_Form(forms.ModelForm):
 
     class Meta:
         model = labbotomist_details
-        fields = ['username', 'password', 'full_name', 'mobile_no', 'address']
+        fields = ['email', 'password', 'only_delivery', 'full_name', 'mobile_no', 'address']
         widgets = {
             'full_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Full Name'}),
             'mobile_no': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Enter Mobile No'}),
@@ -32,10 +31,10 @@ class labbotomist_details_Form(forms.ModelForm):
 
     def save(self, commit=True):
         # Create User first
-        username = self.cleaned_data['username']
+        email = self.cleaned_data['email']
         password = self.cleaned_data['password']
 
-        user, created = User.objects.get_or_create(username=username)
+        user, created = User.objects.get_or_create(email=email, username=email, is_labbotomist = True)
         if password:
             user.set_password(password)
             user.save()

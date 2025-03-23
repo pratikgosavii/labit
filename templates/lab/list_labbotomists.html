@@ -33,6 +33,7 @@
                                             <th>Full Name</th>
                                             <th>Mobile No</th>
                                             <th>Address</th>
+                                            <th>Only Delivery</th>
                                             <th>Created At</th>
                                             <th>Action</th>
                                         </tr>
@@ -44,6 +45,7 @@
                                                 <td>{{ lab.full_name }}</td>
                                                 <td>{{ lab.mobile_no }}</td>
                                                 <td>{{ lab.address }}</td>
+                                                <td>{{ lab.only_delivery }}</td>
                                                 <td>{{ lab.created_at|date:"d-m-Y H:i" }}</td>
                                                 <td>
                                                     <a href="{% url 'update_labbotomist' lab.id %}" class="text-primary">

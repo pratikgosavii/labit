@@ -7,6 +7,7 @@ from users.models import *
 class pharmacy(models.Model):
     
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    email = models.EmailField(max_length=255, unique=True)  # Added email field
     owner_full_name = models.CharField(max_length=255)
     pharmacy_name = models.CharField(max_length=255)
     mobile_no = models.CharField(max_length=15, unique=True)

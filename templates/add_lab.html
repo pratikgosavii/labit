@@ -72,9 +72,27 @@
                     <form method="POST"  enctype="multipart/form-data">
                         {% csrf_token %}
                         <!-- Category Title Section -->
+
+                        
+                        <div class="mb-4">
+                            <label for="name" class="form-label">Email:</label>
+                            {{ form.email }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            {{ form.password }}
+                        </div>
+
                         <div class="mb-4">
                             <label for="name" class="form-label">Name:</label>
                             {{ form.name }}
+                        </div>
+
+                    
+                        <div class="mb-4">
+                            <label for="name" class="form-label">Lab Name:</label>
+                            {{ form.lab_name }}
                         </div>
                         
                         
