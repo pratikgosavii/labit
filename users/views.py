@@ -7,29 +7,62 @@ from django.contrib import messages
 from .forms import *
 
 
-def login_page(request):
-    forms = LoginForm()
-    if request.method == 'POST':
-        forms = LoginForm(request.POST)
-        if forms.is_valid():
-            username = forms.cleaned_data['username']
-            password = forms.cleaned_data['password']
-            print(username)
-            print(password)
-            user = authenticate(username=username, password=password)
-            if user:
-                login(request, user)
+# def login_page(request):
+#     forms = LoginForm()
+#     if request.method == 'POST':
+#         forms = LoginForm(request.POST)
+#         if forms.is_valid():
+#             username = forms.cleaned_data['username']
+#             password = forms.cleaned_data['password']
+#             print(username)
+#             print(password)
+#             user = authenticate(username=username, password=password)
+#             if user:
+#                 login(request, user)
 
-                if user.is_doctor:
-                    print('---------------------------------')
-                    print('---------------------------------')
-                    print('---------------------------------')
-                return redirect('dashboard')
-            else:
-                messages.error(request, 'wrong username password')
-    context = {'form': forms}
-    return render(request, 'adminLogin.html', context)
+#                 if user.is_doctor:
+#                     print('---------------------------------')
+#                     print('---------------------------------')
+#                     print('---------------------------------')
+#                 return redirect('dashboard')
+#             else:
+#                 messages.error(request, 'wrong username password')
+#     context = {'form': forms}
+#     return render(request, 'adminLogin.html', context)
 
+from .models import User
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth import authenticate
+
+class SignupView(APIView):
+    def post(self, request):
+        email = request.data.get("email")
+        password = request.data.get("password")
+
+        if User.objects.filter(email=email).exists():
+            return Response({"error": "Email already exists"}, status=status.HTTP_400_BAD_REQUEST)
+
+        user = User.objects.create_user(username=email, email=email, password=password, is_customer = True)
+        return Response({"message": "User registered successfully"}, status=status.HTTP_201_CREATED)
+
+class LoginView(APIView):
+    def post(self, request):
+        email = request.data.get("email")
+        password = request.data.get("password")
+
+        user = authenticate(username=email, password=password)
+        if user is None:
+            return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
+
+        refresh = RefreshToken.for_user(user)
+        return Response({
+            "access": str(refresh.access_token),
+            "refresh": str(refresh),
+            "user": {"id": user.id, "email": user.email}
+        }, status=status.HTTP_200_OK)
 
 
 # def resgister_page(request):

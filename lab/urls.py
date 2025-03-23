@@ -22,8 +22,6 @@ urlpatterns = [
     path('delete-labbotomist/<int:labbotomist_id>/', delete_labbotomist, name='delete_labbotomist'),
     path('get-labbotomist/', get_labbotomist, name='get_labbotomist'),
 
-    path('get-orders/', get_order.as_view(), name='get_order'),
-    path('update-order/<order_id>', update_order, name='update_orders'),
 
 
 ] 

@@ -140,22 +140,22 @@ from rest_framework import status
 
 
 
-class get_order(APIView):
+# class get_order(APIView):
 
-    def get(self, request, *args, **kwargs):
-        user_id = request.GET.get("user")  # Get user ID from query params
-        order_type = request.GET.get("type")  # Get order type from query params
+#     def get(self, request, *args, **kwargs):
+#         user_id = request.GET.get("user")  # Get user ID from query params
+#         order_type = request.GET.get("type")  # Get order type from query params
 
-        orders = order.objects.all()
+#         orders = order.objects.all()
 
-        if user_id:
-            orders = orders.filter(user_id=user_id)
+#         if user_id:
+#             orders = orders.filter(user_id=user_id)
 
-        if order_type:
-            orders = orders.filter(type=order_type)
+#         if order_type:
+#             orders = orders.filter(type=order_type)
 
-        serializer = order_serializer(orders, many=True)
-        return JsonResponse(serializer.data, status=status.HTTP_200_OK)
+#         serializer = order_serializer(orders, many=True)
+#         return JsonResponse(serializer.data, status=status.HTTP_200_OK)
     
 
 
@@ -167,29 +167,29 @@ from .models import *
 
 import json
 
-@csrf_exempt  # Use only if CSRF is an issue
-def update_order(request, order_id):
+# @csrf_exempt  # Use only if CSRF is an issue
+# def update_order(request, order_id):
 
-    if request.method == 'POST':
+#     if request.method == 'POST':
 
-        try:
-            order_instance = order.objects.get(id=order_id)
+#         try:
+#             order_instance = order.objects.get(id=order_id)
 
-            data = json.loads(request.body)  # Read request body properly
-            order_instance.status = data.get("status", order_instance.status)
-            order_instance.save()
+#             data = json.loads(request.body)  # Read request body properly
+#             order_instance.status = data.get("status", order_instance.status)
+#             order_instance.save()
 
-            return JsonResponse({
-                "success": True,
-                "message": "Order status updated!",
-                "data": {
-                    "order_id": order_instance.id,
-                    "status": order_instance.status
-                }
-            }, status=200)
+#             return JsonResponse({
+#                 "success": True,
+#                 "message": "Order status updated!",
+#                 "data": {
+#                     "order_id": order_instance.id,
+#                     "status": order_instance.status
+#                 }
+#             }, status=200)
 
-        except order.DoesNotExist:
-            return JsonResponse({"success": False, "message": "Order not found", "data": {}}, status=404)
+#         except order.DoesNotExist:
+#             return JsonResponse({"success": False, "message": "Order not found", "data": {}}, status=404)
 
-        except json.JSONDecodeError:
-            return JsonResponse({"success": False, "message": "Invalid JSON", "data": {}}, status=400)
+#         except json.JSONDecodeError:
+#             return JsonResponse({"success": False, "message": "Invalid JSON", "data": {}}, status=400)

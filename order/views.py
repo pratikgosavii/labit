@@ -1,5 +1,6 @@
 from django.http import JsonResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 
 # Create your views here.
 
@@ -138,8 +139,13 @@ class add_order(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 class get_order(APIView):
+    
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         user_id = request.GET.get("user")  # Get user ID from query params
@@ -202,6 +208,30 @@ def list_order(request, order_type):
     return render(request, 'order/list_order.html', context)
 
 
+
+
+def order_recieved_to_hub(request):
+
+    pharmacy_id = request.POST.get('pharmacy_id')
+    order_id = request.POST.get('order_id')
+
+    if not pharmacy_id or not order_id:
+        return JsonResponse({"error": "pharmacy_id and order_id are required"}, status=400)
+
+    # Fetch order object safely
+    order_obj = get_object_or_404(order, id=order_id)
+    
+    # Update the pharmacy_id
+    order_obj.pharmacy_id = pharmacy_id
+    order_obj.save()
+
+    
+    return JsonResponse({"message": "Success"}, status=200)
+
+
+
+
+
 def show_orders_from_pharmacy(request, order_type):
 
     data = order.objects.filter(pharmacy != None, type=order_type).values()  # Convert queryset to list of dicts
@@ -209,11 +239,20 @@ def show_orders_from_pharmacy(request, order_type):
     return JsonResponse(list(data), safe=False)
 
 
-def get_orders_from_pharmacy(request):
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from .models import hub_to_vendor
+from .serializers import HubToVendorSerializer
 
-    # data = order.objects.filter(type=order_type).values()  # Convert queryset to list of dicts
-    
-    # return JsonResponse(list(data), safe=False)
+class get_orders_from_pharmacy(APIView):
+    def post(self, request):
+        serializer = HubToVendorSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "Hub to Vendor entry created successfully", "data": serializer.data}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
     
 def your_order_labbotomist(request, order_type):

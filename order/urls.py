@@ -7,6 +7,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
 
+    # customer api
 
     path('apply_coupon/', apply_coupon, name='apply_coupon'),
     path('add_to_cart/', AddToCartView.as_view(), name='add_to_cart'),
@@ -14,12 +15,14 @@ urlpatterns = [
    
     path('add-order/', add_order.as_view(), name='add_order'),
     path('get-orders/', get_order.as_view(), name='get_order'),
-    path('update-orders/<order_id>', update_order, name='update_order'),
+    path('update-orders/<order_id>', update_order, name='update_order'), # for admin
     path('list-orders/<order_type>', list_order, name='list_order'),
 
 
+    #pharmacy api
+    path('orders-recieved-to-hub', order_recieved_to_hub, name='order_recieved_to_hub'),
     path('show-orders-from-pharmacy/<order_type>', show_orders_from_pharmacy, name='show_orders_from_pharmacy'),
-    path('get-orders-from-pharmacy/', get_orders_from_pharmacy, name='get_orders_from_pharmacy'),
+    path('get-orders-from-pharmacy/', get_orders_from_pharmacy.as_view(), name='get_orders_from_pharmacy'),
     path('your-orders-labbotomist/<order_type>', your_order_labbotomist, name='list_order_labbotomist'),
 
 

@@ -52,3 +52,10 @@ class order(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending")
     created_at = models.DateTimeField(auto_now_add=True)
 
+
+
+class hub_to_vendor(models.Model):
+
+    order = models.ForeignKey(order, on_delete=models.CASCADE)
+    labbotomist = models.ForeignKey(labbotomist_details, on_delete=models.CASCADE, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)

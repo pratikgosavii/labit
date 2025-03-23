@@ -27,3 +27,12 @@ class order_serializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Medicine must be provided for medicine orders.")
         
         return data
+    
+from rest_framework import serializers
+from .models import hub_to_vendor
+
+class HubToVendorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = hub_to_vendor
+        fields = ['id', 'order', 'labbotomist', 'created_at']
+        read_only_fields = ['id', 'created_at']  # Auto-filled fields
