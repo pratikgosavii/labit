@@ -16,6 +16,7 @@ class lab_test(models.Model):
 
     lab = models.ForeignKey(lab, on_delete=models.CASCADE)  # Link to the user
     test = models.ForeignKey(test, on_delete=models.CASCADE)  # Link to the doctor
+    address = models.TextField()
     processing_time = models.IntegerField()
     b2b_price = models.IntegerField()
     description = models.CharField(max_length=120, unique=False, null = True, blank = True)

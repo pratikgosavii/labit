@@ -144,6 +144,7 @@ class lab_Form(forms.ModelForm):
             'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'rating': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.1'}),
             'remark': forms.TextInput(attrs={'class': 'form-control', 'id': 'remark'}),
+            'address': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter Address', 'rows': 3}),
             'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input', 'id': 'is_active'}),
         }
 
