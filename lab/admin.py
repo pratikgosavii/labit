@@ -6,3 +6,4 @@ from django.contrib import admin
 from .models import *
 
 admin.site.register(labbotomist_details)
+admin.site.register(lab_test)

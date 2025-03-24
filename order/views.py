@@ -58,7 +58,7 @@ class AddToCartView(APIView):
     def post(self, request):
         try:
             # Fetch user instance (use request.user if authenticated)
-            user_instance = User.objects.get(id=1)  
+            user_instance = request.user
 
             item_type = request.data.get('type')  # Use request.data for JSON support
             object_id = request.data.get('object_id')
@@ -108,7 +108,7 @@ class get_cart_items(APIView):
 
     def get(self, request):
 
-        cart_items = cart.objects.filter(user__id=1)
+        cart_items = cart.objects.filter(user=request.user)
         
         medicine_items = []
         test_items = []
@@ -146,24 +146,25 @@ class add_order(APIView):
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
+from .models import *
+
 class get_order(APIView):
     
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        user_id = request.GET.get("user")  # Get user ID from query params
-        order_type = request.GET.get("type")  # Get order type from query params
+        user_instance = request.user
+        object_type = request.GET.get("type")  # Get order type from query params
 
-        orders = order.objects.all()
 
-        if user_id:
-            orders = orders.filter(user_id=user_id)
+        if user_instance:
+            orders_data = order.objects.filter(user=user_instance)
 
-        if order_type:
-            orders = orders.filter(type=order_type)
+        if object_type:
+            orders_data = order.objects.filter(type=object_type)
 
-        serializer = order_serializer(orders, many=True)
+        serializer = order_serializer(orders_data, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 

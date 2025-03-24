@@ -41,7 +41,7 @@ class order(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="orders")
     type = models.CharField(max_length=10, choices=TYPE_CHOICES)  # Differentiates Test & Medicine orders
-    test = models.ForeignKey(test, on_delete=models.SET_NULL, null=True, blank=True)  # Optional for test orders
+    lab_test = models.ForeignKey(lab_test, on_delete=models.SET_NULL, null=True, blank=True)  # Optional for test orders
     medicine = models.ForeignKey(medicine, on_delete=models.SET_NULL, null=True, blank=True)  # Optional for medicine orders
     labbotomist = models.ForeignKey(labbotomist_details, on_delete=models.SET_NULL, null=True, blank=True)  # Optional for medicine orders
     pharmacy = models.ForeignKey(pharmacy, on_delete=models.SET_NULL, null=True, blank=True)  # Optional for medicine orders

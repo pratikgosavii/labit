@@ -45,7 +45,7 @@ class SignupView(APIView):
         if User.objects.filter(email=email).exists():
             return Response({"error": "Email already exists"}, status=status.HTTP_400_BAD_REQUEST)
 
-        user = User.objects.create_user(username=email, email=email, password=password, is_customer = True)
+        user = User.objects.create_user(email=email, password=password, is_customer = True)
         return Response({"message": "User registered successfully"}, status=status.HTTP_201_CREATED)
 
 class LoginView(APIView):
@@ -54,7 +54,7 @@ class LoginView(APIView):
         password = request.data.get("password")
 
         # Check if user exists and is a customer
-        user = authenticate(username=email, password=password)
+        user = authenticate(email=email, password=password)
 
         if user is None:
             return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
