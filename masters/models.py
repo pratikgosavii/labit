@@ -41,6 +41,7 @@ class lab(models.Model):
     name = models.CharField(max_length=120, unique=False)
     lab_name = models.CharField(max_length=120, unique=False)
     image = models.ImageField(upload_to='doctor_images/')
+    address = models.TextField()
     rating = models.DecimalField(max_digits=3, decimal_places=1, null = True, blank = True)
     remark = models.CharField(max_length=120, unique=False, null = True, blank = True)
     is_active = models.BooleanField(default = True)
@@ -56,7 +57,7 @@ class test(models.Model):
     image = models.ImageField(upload_to='doctor_images/')
     rating = models.DecimalField(max_digits=3, decimal_places=1, null = True, blank = True)
     description = models.CharField(max_length=120, unique=False, null = True, blank = True)
-    address = models.TextField()
+    
     b2b_min_price = models.IntegerField()
     b2b_max_price = models.IntegerField()
     mrp = models.IntegerField()
