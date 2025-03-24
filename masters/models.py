@@ -41,6 +41,7 @@ class lab(models.Model):
     name = models.CharField(max_length=120, unique=False)
     lab_name = models.CharField(max_length=120, unique=False)
     image = models.ImageField(upload_to='doctor_images/')
+    mobile_no = models.CharField(max_length=15, unique=True)
     address = models.TextField()
     rating = models.DecimalField(max_digits=3, decimal_places=1, null = True, blank = True)
     remark = models.CharField(max_length=120, unique=False, null = True, blank = True)
