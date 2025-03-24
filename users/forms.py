@@ -2,9 +2,9 @@ from django import forms
 
 
 class LoginForm(forms.Form):
-    username = forms.CharField(widget=forms.TextInput(attrs={
+    email = forms.CharField(widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': 'Username',
+        'placeholder': 'email',
     }))
     password = forms.CharField(widget=forms.TextInput(attrs={
         'class': 'form-control',
@@ -20,4 +20,4 @@ from .models import User  # Import your User model
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ('username', 'password1', 'password2', 'is_doctor')
+        fields = ('email', 'password1', 'password2', 'is_doctor')

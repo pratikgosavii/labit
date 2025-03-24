@@ -13,11 +13,22 @@ class pharmachy_serializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         email = validated_data.pop('email')
+        print(email)
         password = validated_data.pop('password')
+        try:
+            d = User.objects.get(email = email)
+            print('----------')
+            print('----------')
+            print('----------')
+            print('----------')
+            print('----------')
+            print(d)
+        except User.DoesNotExist:
 
+            pass
+        
         user = User.objects.create(
             email=email,
-            username=email,
             is_pharmassist=True,
             password=make_password(password)  # Encrypt password
         )

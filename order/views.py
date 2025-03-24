@@ -47,9 +47,13 @@ from rest_framework import status
 from django.contrib.contenttypes.models import ContentType
 from .models import cart
 from .serializers import cartserializer
+from rest_framework.permissions import IsAuthenticated
+
+
 
 class AddToCartView(APIView):
 
+    permission_classes = [IsAuthenticated]  
 
     def post(self, request):
         try:

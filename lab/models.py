@@ -25,7 +25,6 @@ class lab_test(models.Model):
 
 class labbotomist_details(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="labbotomist_details")
-    email = models.EmailField(max_length=255, unique=True)  # Added email field
     full_name = models.CharField(max_length=255)
     mobile_no = models.CharField(max_length=15, unique=True)
     address = models.TextField()

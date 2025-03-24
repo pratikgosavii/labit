@@ -28,7 +28,6 @@ class LabbotomistDetailsSerializer(serializers.ModelSerializer):
 
         user = User.objects.create(
             email=email,
-            username = email,
             is_labbotomist=True,
             password=make_password(password)  # Encrypt password
         )
@@ -66,7 +65,6 @@ class LabSerializer(serializers.ModelSerializer):
         user = User.objects.create(
             email=email,
             is_vendor=True,
-            username=email,
             password=make_password(password)  # Encrypt password
         )
 

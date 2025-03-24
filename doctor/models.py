@@ -20,4 +20,4 @@ class Appointment(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='upcoming')
 
     def __str__(self):
-        return f"{self.user.username} - {self.doctor.name} ({self.appointment_date})"
+        return f"{self.user.email} - {self.doctor.name} ({self.appointment_date})"

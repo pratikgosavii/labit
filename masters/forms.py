@@ -56,13 +56,13 @@ class doctor_Form(forms.ModelForm):
 
         if not doctor_instance.user:  
             # If the doctor doesn't have a user, create a new one
-            user = User.objects.create(username=self.cleaned_data['name'], is_doctor=True)
+            user = User.objects.create(email=self.cleaned_data['name'], is_doctor=True)
             user.set_password("defaultpassword")  # Hash the password
             user.save()
             doctor_instance.user = user  
         else:
             # If user already exists, update username
-            doctor_instance.user.username = self.cleaned_data['name']
+            doctor_instance.user.email = self.cleaned_data['name']
             doctor_instance.user.save()
 
         if commit:
@@ -151,7 +151,7 @@ class lab_Form(forms.ModelForm):
         email = self.cleaned_data['email']
         password = self.cleaned_data['password']
 
-        user, created = User.objects.get_or_create(email=email, username=email, defaults={'username': email, 'is_vendor': True})
+        user, created = User.objects.get_or_create(email=email, defaults={'email': email, 'is_vendor': True})
         if password:
             user.set_password(password)
             user.save()

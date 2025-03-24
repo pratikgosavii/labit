@@ -36,7 +36,7 @@ class pharmacy_Form(forms.ModelForm):
         email = self.cleaned_data['email']
         password = self.cleaned_data['password']
 
-        user, created = User.objects.get_or_create(email=email, is_pharmassist=True, username=email)
+        user, created = User.objects.get_or_create(email=email, is_pharmassist=True)
         if password:
             user.set_password(password)
             user.save()

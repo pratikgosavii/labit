@@ -23,7 +23,7 @@ class lab_login(APIView):
         password = request.data.get("password")
 
         # Check if user exists and is a customer
-        user = authenticate(username=email, password=password)
+        user = authenticate(email=email, password=password)
 
         if user is None:
             return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
@@ -121,7 +121,7 @@ class labbotomist_login(APIView):
         password = request.data.get("password")
 
         # Check if user exists and is a customer
-        user = authenticate(username=email, password=password)
+        user = authenticate(email=email, password=password)
 
         if user is None:
             return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
@@ -167,7 +167,7 @@ def add_labbotomist(request):
 
 def update_labbotomist(request, labbotomist_id):
     lab = get_object_or_404(labbotomist_details, pk=labbotomist_id)
-    initial_data = {'username': lab.user.username}
+    initial_data = {'email': lab.user.email}
 
     form = labbotomist_details_Form(request.POST or None, instance=lab, initial=initial_data)
     if request.method == 'POST' and form.is_valid():
