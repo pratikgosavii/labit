@@ -123,25 +123,20 @@ from .serializers import *
 
 class add_order(APIView):
     def post(self, request, *args, **kwargs):
+        
         data = request.data.copy()
-
-        serializer = order_serializer(data=data)
+        serializer = order_serializer(data=data, context={'request': request})
+        
         if serializer.is_valid():
-            order = serializer.save()
+            order = serializer.save(user=request.user)  # Assign user here
 
             # Payment Integration (Dummy Example)
-            payment_status = "paid"  # Assume payment success for demo
-            transaction_id = "TXN123456789"  # Dummy transaction ID
-            
-            # Update payment details
-            order.payment_status = payment_status
-            order.transaction_id = transaction_id
+             # Dummy transaction ID
             order.save()
 
             return Response({"message": "Order placed successfully!", "order_id": order.id}, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -164,7 +159,7 @@ class get_order(APIView):
         if object_type:
             orders_data = order.objects.filter(type=object_type)
 
-        serializer = order_serializer(orders_data, many=True)
+        serializer = order_serializer(orders_data, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -204,7 +199,7 @@ def update_order(request, order_id):
 def list_order(request, order_type):
 
     data = order.objects.filter(type = order_type)
-
+    print(data)
     context = {
         'data': data
     }
@@ -215,33 +210,44 @@ def list_order(request, order_type):
 
 
 
-def order_recieved_to_hub(request):
+from django.views.decorators.csrf import csrf_exempt
 
-    pharmacy_id = request.POST.get('pharmacy_id')
-    order_id = request.POST.get('order_id')
 
-    if not pharmacy_id or not order_id:
-        return JsonResponse({"error": "pharmacy_id and order_id are required"}, status=400)
+from django.views import View
 
-    # Fetch order object safely
-    order_obj = get_object_or_404(order, id=order_id)
+from users.permissions import *
+
+class order_recieved_to_hub(APIView):
+
+    permission_classes = [IsPharmacist]  
+
+    def post(self, request, *args, **kwargs):
+        pharmacy_id = request.data.get('pharmacy_id')
+        order_id = request.data.get('order_id')
+
+        if not pharmacy_id or not order_id:
+            return Response({"error": "pharmacy_id and order_id are required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Fetch order object safely
+        order_obj = get_object_or_404(order, id=order_id)
+
+        # Update the pharmacy_id
+        order_obj.pharmacy_id = pharmacy_id
+        order_obj.save()
+
+        return Response({"message": "Success"}, status=status.HTTP_200_OK)
+
     
-    # Update the pharmacy_id
-    order_obj.pharmacy_id = pharmacy_id
-    order_obj.save()
-
+class show_orders_from_pharmacy(APIView):
     
-    return JsonResponse({"message": "Success"}, status=200)
+    permission_classes = [IsLabbotomist]  
 
+    def get(self, request, order_type, *args, **kwargs):
 
+        data = order.objects.filter(pharmacy__isnull=False, type=order_type)
+        serialized_data = order_serializer(data, many=True).data  # Serialize queryset
 
-
-
-def show_orders_from_pharmacy(request, order_type):
-
-    data = order.objects.filter(pharmacy != None, type=order_type).values()  # Convert queryset to list of dicts
-    
-    return JsonResponse(list(data), safe=False)
+        return Response({"data": serialized_data}, status=status.HTTP_200_OK)
 
 
 from rest_framework import status

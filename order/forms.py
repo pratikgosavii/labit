@@ -13,7 +13,7 @@ class order_Form(forms.ModelForm):
         widgets = {
             'user': forms.Select(attrs={'class': 'form-control', 'id': 'user'}),
             'type': forms.Select(attrs={'class': 'form-control', 'id': 'type'}),
-            'test': forms.Select(attrs={'class': 'form-control', 'id': 'test'}),
+            'lab_test': forms.Select(attrs={'class': 'form-control', 'id': 'test'}),
             'medicine': forms.Select(attrs={'class': 'form-control', 'id': 'medicine'}),
             'labbotomist': forms.Select(attrs={'class': 'form-control', 'id': 'labbotomist'}),
             'quantity': forms.NumberInput(attrs={'class': 'form-control', 'id': 'quantity'}),
