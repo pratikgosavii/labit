@@ -56,7 +56,7 @@ class LabSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = lab
-        fields = ['id', 'name', 'lab_name', 'email', 'password']
+        fields = ['id', 'name', 'lab_name', 'email', 'password', 'address']
 
     def create(self, validated_data):
         email = validated_data.pop('email')
