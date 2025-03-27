@@ -482,6 +482,86 @@ def get_medicine_category(request):
 
 
 @login_required(login_url='login')
+def add_test_category(request):
+
+    if request.method == 'POST':
+
+        forms = test_category_Form(request.POST, request.FILES)
+
+        if forms.is_valid():
+            forms.save()
+            return redirect('list_test_category')
+        else:
+            print(forms.errors)
+            context = {
+                'form': forms
+            }
+            return render(request, 'add_test_category.html', context)
+    
+    else:
+
+        forms = test_category_Form()
+
+        context = {
+            'form': forms
+        }
+        return render(request, 'add_test_category.html', context)
+
+        
+
+@login_required(login_url='login')
+def update_test_category(request, test_category_id):
+
+    if request.method == 'POST':
+
+        instance = test_category.objects.get(id=test_category_id)
+
+        forms = test_category_Form(request.POST, request.FILES, instance=instance)
+
+        if forms.is_valid():
+            forms.save()
+            return redirect('list_test_category')
+        else:
+            print(forms.errors)
+
+            context = {
+                'form': forms
+            }
+
+            return render(request, 'add_test_category.html', context)
+    
+    else:
+
+        instance = test_category.objects.get(id=test_category_id)
+        forms = test_category_Form(instance=instance)
+
+        context = {
+            'form': forms
+        }
+        return render(request, 'add_test_category.html', context)
+
+        
+
+@login_required(login_url='login')
+def delete_test_category(request, test_category_id):
+
+    test_category.objects.get(id=test_category_id).delete()
+
+    return HttpResponseRedirect(reverse('list_test_category'))
+
+
+@login_required(login_url='login')
+def list_test_category(request):
+
+    data = test_category.objects.all()
+    context = {
+        'data': data
+    }
+    return render(request, 'list_test_category.html', context)
+
+
+
+@login_required(login_url='login')
 def add_medicine(request):
 
     if request.method == 'POST':

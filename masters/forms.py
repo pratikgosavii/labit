@@ -188,6 +188,17 @@ class coupon_Form(forms.ModelForm):
 
 
 
+class test_category_Form(forms.ModelForm):
+    class Meta:
+        model = test_category
+        fields = '__all__'
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': 'form-control', 'id': 'name'
+            }),
+        }
+
+
 class medicine_category_Form(forms.ModelForm):
     class Meta:
         model = medicine_category

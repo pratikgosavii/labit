@@ -52,12 +52,19 @@ class lab(models.Model):
         return self.name
     
 
+class test_category(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+    
 class test(models.Model):
 
     name = models.CharField(max_length=120, unique=False)
     image = models.ImageField(upload_to='doctor_images/')
     rating = models.DecimalField(max_digits=3, decimal_places=1, null = True, blank = True)
     description = models.CharField(max_length=120, unique=False, null = True, blank = True)
+    category = models.ForeignKey(test_category, on_delete=models.SET_NULL, null=True, blank=True)
     
     b2b_min_price = models.IntegerField()
     b2b_max_price = models.IntegerField()

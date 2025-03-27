@@ -39,6 +39,12 @@ urlpatterns = [
     path('list-medicine_category/', list_medicine_category, name='list_medicine_category'),
     path('get-medicine_category/', get_medicine_category, name='get_medicine_category'),
 
+    path('add-test_category/', add_test_category, name='add_test_category'),
+    path('update-test_category/<test_category_id>', update_test_category, name='update_test_category'),
+    path('delete-test_category/<test_category_id>', delete_test_category, name='delete_test_category'),
+    path('list-test_category/', list_test_category, name='list_test_category'),
+    path('get-test_category/', get_test_category, name='get_test_category'),
+
     path('add-medicine/', add_medicine, name='add_medicine'),
     path('update-medicine/<medicine_id>', update_medicine, name='update_medicine'),
     path('delete-medicine/<medicine_id>', delete_medicine, name='delete_medicine'),
