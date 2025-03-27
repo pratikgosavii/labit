@@ -97,6 +97,10 @@ class test_Form(forms.ModelForm):
             'name': forms.TextInput(attrs={
                 'class': 'form-control', 'id': 'name'
             }),
+
+            'category': forms.Select(attrs={
+                'class': 'form-control', 'id': 'category'
+            }),
           
 
             'b2b_min_price': forms.NumberInput(attrs={

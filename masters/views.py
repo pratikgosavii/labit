@@ -560,6 +560,12 @@ def list_test_category(request):
     return render(request, 'list_test_category.html', context)
 
 
+def get_test_category(request):
+
+    data = list(test_category.objects.values())  # ✅ Converts QuerySet to a list of dictionaries
+    return JsonResponse({'data': data})
+
+
 
 @login_required(login_url='login')
 def add_medicine(request):

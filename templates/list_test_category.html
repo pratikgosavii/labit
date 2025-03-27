@@ -98,8 +98,8 @@
                                                     <td>{{ forloop.counter }}</td>
                                                     <td>{{ test.name }}</td>
                                                     <td>
-                                                        <a href="{% url 'update_test' test.id %}"><i class="bi bi-pencil-square text-primary action-icons" title="Edit"></i></a>
-                                                        <a href="{% url 'delete_test' medicine.id %}"><i class="bi bi-trash text-danger action-icons" title="Delete"></i></a>
+                                                        <a href="{% url 'update_test_category' test.id %}"><i class="bi bi-pencil-square text-primary action-icons" title="Edit"></i></a>
+                                                        <a href="{% url 'delete_test_category' test.id %}"><i class="bi bi-trash text-danger action-icons" title="Delete"></i></a>
                                                     </td>
                                                 </tr>
                                             {% empty %}
