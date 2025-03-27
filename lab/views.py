@@ -93,25 +93,29 @@ def add_lab_tests(request):
 
 from .serializers import LabTestSerializer
 
+from .filters import *
+
 @permission_classes([IsVendor])
 def get_lab_tests(request):
 
-    data = json.loads(request.body)
+    data = request.data  # Use request.data for better handling
 
-    lab_id = data.get('lab_id')
-
+    lab_id = data.get("lab_id")
     if not lab_id:
         return JsonResponse({"error": "Lab ID is required"}, status=400)
 
-    lab_tests = lab_test.objects.filter(lab__id=lab_id)
-    
-    if not lab_tests.exists():
-        return JsonResponse({"message": "No tests found for this lab"}, status=404)
+    lab_tests = lab_test.objects.filter(lab_id=lab_id)
 
-    serialized_data = LabTestSerializer(lab_tests, many=True).data
-    
+    # Apply filters
+    lab_test_filter = LabTestFilter(data, queryset=lab_tests)
+    filtered_lab_tests = lab_test_filter.qs
+
+    if not filtered_lab_tests.exists():
+        return JsonResponse({"message": "No tests found for this lab with the given filters"}, status=404)
+
+    serialized_data = LabTestSerializer(filtered_lab_tests, many=True).data
+
     return JsonResponse({"data": serialized_data}, status=200, safe=False)
-
 
 
 
