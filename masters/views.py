@@ -739,3 +739,13 @@ def get_home_banner(request):
     serialized_data = HomeBannerSerializer(data, many=True).data  
 
     return JsonResponse({"data": serialized_data}, status=200, safe=False)  
+
+
+
+
+
+def list_customers(request):
+
+    data = User.objects.all()
+
+    return render(request, 'list_users.html', {'data' : data})

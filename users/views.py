@@ -71,6 +71,31 @@ class LoginView(APIView):
         }, status=status.HTTP_200_OK)
 
 
+def  login_admin(request):
+
+    forms = LoginForm()
+    if request.method == 'POST':
+        forms = LoginForm(request.POST)
+        if forms.is_valid():
+            email = forms.cleaned_data['email']
+            password = forms.cleaned_data['password']
+            print(email)
+            print(password)
+            user = authenticate(email=email, password=password)
+            if user:
+                login(request, user)
+
+                if user.is_superuser:
+                    print('---------------------------------')
+                    print('---------------------------------')
+                    print('---------------------------------')
+                return redirect('dashboard')
+            else:
+                messages.error(request, 'wrong username password')
+    context = {'form': forms}
+    return render(request, 'adminLogin.html', context)
+
+
 # def resgister_page(request):
 
 #     forms = registerForm()

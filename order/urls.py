@@ -22,8 +22,8 @@ urlpatterns = [
     #pharmacy api
     path('orders-recieved-to-hub/', order_recieved_to_hub.as_view(), name='order_recieved_to_hub'),
     path('show-orders-from-pharmacy/<order_type>', show_orders_from_pharmacy.as_view(), name='show_orders_from_pharmacy'),
-    path('get-orders-from-pharmacy/', get_orders_from_pharmacy.as_view(), name='get_orders_from_pharmacy'),
-    path('your-orders-labbotomist/<order_type>', your_order_labbotomist, name='list_order_labbotomist'),
+    path('get-orders-from-pharmacy-to-hub/', get_orders_from_pharmacy_to_vendor.as_view(), name='get_orders_from_pharmacy_to_vendor'),
+    path('your-orders-labbotomist/<order_type>', your_order_labbotomist.as_view(), name='list_order_labbotomist'),
 
 
 

@@ -141,6 +141,7 @@ class lab_Form(forms.ModelForm):
         fields = ['email', 'password', 'name', 'image', 'lab_name', 'rating', 'remark', 'is_active']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'id': 'name'}),
+            'lab_name': forms.TextInput(attrs={'class': 'form-control', 'id': 'lab_name'}),
             'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'rating': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.1'}),
             'remark': forms.TextInput(attrs={'class': 'form-control', 'id': 'remark'}),

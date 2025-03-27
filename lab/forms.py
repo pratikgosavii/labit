@@ -34,7 +34,7 @@ class labbotomist_details_Form(forms.ModelForm):
         email = self.cleaned_data['email']
         password = self.cleaned_data['password']
 
-        user, created = User.objects.get_or_create(email=email, username=email, is_labbotomist = True)
+        user, created = User.objects.get_or_create(email=email, is_labbotomist = True)
         if password:
             user.set_password(password)
             user.save()

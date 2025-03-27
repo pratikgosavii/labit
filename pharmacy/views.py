@@ -17,7 +17,7 @@ def add_pharmacy(request):
         form = pharmacy_Form(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('list_pharmacys')  # Redirect after successful add
+            return redirect('list_pharmacy')  # Redirect after successful add
         else:
             print(form.errors)
 

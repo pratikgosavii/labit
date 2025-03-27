@@ -86,14 +86,14 @@
     <form action="" method="POST">
         {% csrf_token %}
         <div class="mb-3">
-            <label for="email" class="form-label">Username</label>
+            <label for="email" class="form-label">Email</label>
             <input
                     type="text"
                     class="form-control"
-                    id="username"
+                    id="email"
                     value="{{ email|default:'' }}"
-                    name="username"
-                    placeholder="Enter your username"
+                    name="email"
+                    placeholder="Enter your email"
                     required
             />
         </div>

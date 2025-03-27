@@ -58,6 +58,8 @@ urlpatterns = [
     path('delete-home-banner/<home_banner_id>', delete_home_banner, name='delete_home_banner'),  # create or fetch list of admins
     path('get-home-banner/', get_home_banner, name='get_home_banner'), 
 
+    path('list-customer/', list_customers, name='list_customers'),  # create or fetch list of admins
+
 
 
 

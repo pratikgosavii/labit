@@ -14,6 +14,8 @@ urlpatterns = [
     path('add-lab-tests/', add_lab_tests, name='add_lab_tests'),
     path('get-lab-tests/', get_lab_tests, name='get_lab_tests'),
 
+    path('get-vendor-orders', get_vendor_order.as_view(), name='get_vendor_order'),
+
 
     path('signup-labbotomist/', CreateLabbotomistView.as_view(), name='signup_labbotomist'),
     path('login-labbotomist/', labbotomist_login.as_view(), name='signup_labbotomist'),

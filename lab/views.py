@@ -48,7 +48,10 @@ class lab_signup(generics.CreateAPIView):
     serializer_class = LabSerializer
 
 
+from users.permissions import *
+from rest_framework.decorators import api_view, permission_classes
 
+@permission_classes([IsVendor])
 @csrf_exempt  # Use only if CSRF is an issue
 def add_lab_tests(request):
 
@@ -57,10 +60,11 @@ def add_lab_tests(request):
         data = json.loads(request.body)  # Parse JSON data
         test_ids = data.get('test_ids', [])
         test_prices = data.get('test_prices', [])
+        processing_time = data.get('processing_time', [])
         lab_id = data.get('lab_id')
 
 
-        if not lab_id or not test_ids or not test_prices or len(test_ids) != len(test_prices):
+        if not lab_id or not test_ids or not test_prices or not processing_time or len(test_ids) != len(test_prices) != len(processing_time):
             return JsonResponse({"error": "Invalid data"}, status=400)
 
         try:
@@ -68,16 +72,19 @@ def add_lab_tests(request):
         except lab.DoesNotExist:
             return JsonResponse({"error": "Lab not found"}, status=404)
 
-        lab_tests = []
-        for test_id, price in zip(test_ids, test_prices):
+        for test_id, price , process_tim in zip(test_ids, test_prices, processing_time):
+            
             try:
                 test_instance = test.objects.get(id=test_id)  # Ensure test exists
-                lab_tests.append(lab_test(lab=lab_instance, test=test_instance, b2b_price=price, processing_time=24))
+                try:
+                    lab_test.objects.get(test=test_instance)
+                
+                except lab_test.DoesNotExist:
+                    lab_test.objects.create(lab=lab_instance, test=test_instance, b2b_price=price, processing_time=process_tim)
             except test.DoesNotExist:
                 continue  # Skip invalid test IDs
 
-        if lab_tests:
-            lab_test.objects.bulk_create(lab_tests)  # Insert all at once
+      
             return JsonResponse({"message": "Lab tests added successfully"}, status=201)
         else:
             return JsonResponse({"error": "No valid tests to add"}, status=400)
@@ -86,9 +93,12 @@ def add_lab_tests(request):
 
 from .serializers import LabTestSerializer
 
+@permission_classes([IsVendor])
 def get_lab_tests(request):
 
-    lab_id = request.GET.get('lab_id')
+    data = json.loads(request.body)
+
+    lab_id = data.get('lab_id')
 
     if not lab_id:
         return JsonResponse({"error": "Lab ID is required"}, status=400)
@@ -101,6 +111,37 @@ def get_lab_tests(request):
     serialized_data = LabTestSerializer(lab_tests, many=True).data
     
     return JsonResponse({"data": serialized_data}, status=200, safe=False)
+
+
+
+
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
+from .models import *
+
+from users.permissions import *
+
+
+class get_vendor_order(APIView):
+    
+    permission_classes = [IsVendor]  
+
+
+    def get(self, request, *args, **kwargs):
+        user_instance = request.user
+        object_type = request.GET.get("type")  # Get order type from query params
+
+
+        if user_instance:
+            orders_data = order.objects.filter(lab_test__lab__user=user_instance)
+
+        if object_type:
+            orders_data = order.objects.filter(type=object_type)
+
+        serializer = order_serializer(orders_data, many=True, context={'request': request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 
 

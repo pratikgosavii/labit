@@ -9,6 +9,10 @@ from django.urls import reverse
 from .models import *
 from masters.models import *
 
+from users.permissions import *
+
+
+
 
 def apply_coupon(cart_total, coupon_code):
     try:
@@ -106,6 +110,8 @@ class AddToCartView(APIView):
 
 class get_cart_items(APIView):
 
+    permission_classes = [IsCustomer]  
+
     def get(self, request):
 
         cart_items = cart.objects.filter(user=request.user)
@@ -120,23 +126,71 @@ class get_cart_items(APIView):
 
 
 from .serializers import *
+from users.permissions import *
+
+from django.db import transaction 
 
 class add_order(APIView):
+
+    permission_classes = [IsCustomer]
+
     def post(self, request, *args, **kwargs):
-        
-        data = request.data.copy()
-        serializer = order_serializer(data=data, context={'request': request})
-        
-        if serializer.is_valid():
-            order = serializer.save(user=request.user)  # Assign user here
+        cart_ids = request.data.get("cart_ids", [])  # List of cart item IDs
+        transaction_id = request.data.get("transaction_id")  # Payment transaction ID
+        payment_status = request.data.get("payment_status", "pending")  # Default to "pending"
 
-            # Payment Integration (Dummy Example)
-             # Dummy transaction ID
-            order.save()
+        if not cart_ids:
+            return Response({"error": "Cart IDs are required"}, status=status.HTTP_400_BAD_REQUEST)
 
-            return Response({"message": "Order placed successfully!", "order_id": order.id}, status=status.HTTP_201_CREATED)
-        
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # Fetch cart items belonging to the user
+        cart_items = cart.objects.filter(id__in=cart_ids, user=request.user)
+
+        if not cart_items.exists():
+            return Response({"error": "No valid cart items found"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Determine order type (assuming all items in cart belong to the same type)
+        order_type = cart_items.first().type  
+        total_price = sum(
+            (item.test.b2b_price if item.type == "test" else item.medicine.price) * item.quantity
+            for item in cart_items
+        )
+
+        with transaction.atomic():  # Ensure atomicity (rollback on failure)
+            # Create order
+            order_instance = order.objects.create(
+                user=request.user,
+                type=order_type,
+                total_price=total_price,
+                payment_status=payment_status,
+                transaction_id=transaction_id  # Store transaction ID
+            )
+
+            # Transfer cart items to order_items
+            order_items = [
+                order_item(
+                    order=order_instance,
+                    lab_test=item.test if item.type == "test" else None,
+                    medicine=item.medicine if item.type == "medicine" else None,
+                    quantity=item.quantity,
+                    is_labitnow=item.is_labitnow,
+                    price=item.test.b2b_price if item.type == "test" else item.medicine.price
+                )
+                for item in cart_items
+            ]
+
+            order_item.objects.bulk_create(order_items)  # Insert all order items efficiently
+
+            # Optional: Clear processed cart items
+            cart_items.delete()
+
+        return Response({
+            "message": "Order placed successfully!",
+            "order_id": order_instance.id,
+            "payment_status": payment_status,
+            "transaction_id": transaction_id
+        }, status=status.HTTP_201_CREATED)
+
+    
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -145,22 +199,22 @@ from .models import *
 
 class get_order(APIView):
     
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsCustomer]  
 
     def get(self, request, *args, **kwargs):
         user_instance = request.user
         object_type = request.GET.get("type")  # Get order type from query params
 
-
-        if user_instance:
-            orders_data = order.objects.filter(user=user_instance)
-
+        # Apply filters efficiently
+        filters = {"user": user_instance}
         if object_type:
-            orders_data = order.objects.filter(type=object_type)
+            filters["type"] = object_type
 
+        orders_data = order.objects.filter(**filters)
         serializer = order_serializer(orders_data, many=True, context={'request': request})
+        
         return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 
 from .forms import *
@@ -256,9 +310,12 @@ from rest_framework.views import APIView
 from .models import hub_to_vendor
 from .serializers import HubToVendorSerializer
 
-class get_orders_from_pharmacy(APIView):
+class get_orders_from_pharmacy_to_vendor(APIView):
+
+    permission_classes = [IsLabbotomist]  
+
     def post(self, request):
-        serializer = HubToVendorSerializer(data=request.data)
+        serializer = HubToVendorSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response({"message": "Hub to Vendor entry created successfully", "data": serializer.data}, status=status.HTTP_201_CREATED)
@@ -266,10 +323,15 @@ class get_orders_from_pharmacy(APIView):
 
 
     
-def your_order_labbotomist(request, order_type):
+class your_order_labbotomist(APIView):
 
-    labbotomist_instance = labbotomist_details.objects.get(id = 1)
+    permission_classes = [IsLabbotomist]  
 
-    data = order.objects.filter(type=order_type, labbotomist = labbotomist_instance).values()  # Convert queryset to list of dicts
-    
-    return JsonResponse(list(data), safe=False)
+    def get(self, request, order_type):
+
+        labbotomist_instance = labbotomist_details.objects.get(user = request.user)
+
+        data = order.objects.filter(type=order_type, labbotomist = labbotomist_instance).values()  # Convert queryset to list of dicts
+        data2 = hub_to_vendor.objects.filter(labbotomist = labbotomist_instance).values()  # Convert queryset to list of dicts
+        
+        return JsonResponse({"orders": list(data), "hub_to_vendor": list(data2)}, safe=False)
