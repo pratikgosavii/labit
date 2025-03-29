@@ -139,14 +139,18 @@ class lab_Form(forms.ModelForm):
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Enter Password'}),
         required=False  # Allow keeping the existing password on update
     )
+    
 
     class Meta:
         model = lab
-        fields = ['email', 'password', 'name', 'image', 'lab_name', 'rating', 'remark', 'is_active']
+        fields = ['email', 'password', 'name', 'mobile_no', 'image', 'lab_name', 'rating', 'remark', 'is_active']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'id': 'name'}),
             'lab_name': forms.TextInput(attrs={'class': 'form-control', 'id': 'lab_name'}),
             'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+             'mobile_no': forms.NumberInput(attrs={
+                'class': 'form-control', 'id': 'mobile_no'
+            }),
             'rating': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.1'}),
             'remark': forms.TextInput(attrs={'class': 'form-control', 'id': 'remark'}),
             'address': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter Address', 'rows': 3}),

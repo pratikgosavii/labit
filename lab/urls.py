@@ -12,7 +12,7 @@ urlpatterns = [
     path('signup-lab/', lab_signup.as_view(), name='signup_lab'),
 
     path('add-lab-tests/', add_lab_tests, name='add_lab_tests'),
-    path('get-lab-tests/', get_lab_tests, name='get_lab_tests'),
+    path('get-lab-tests/', get_lab_tests.as_view(), name='get_lab_tests'),
 
     path('get-vendor-orders', get_vendor_order.as_view(), name='get_vendor_order'),
 
