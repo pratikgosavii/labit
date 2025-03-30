@@ -82,6 +82,7 @@ from django.utils.timezone import now
 
 class coupon(models.Model):
     code = models.CharField(max_length=50, unique=True)  # Unique coupon code
+    title = models.CharField(max_length=50)  # Unique coupon code
     description = models.CharField(max_length=500, null=True, blank=True)  # Field for time slots
     discount_percentage = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)  # e.g., 10%
     discount_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)  # Max ₹1000 discount
