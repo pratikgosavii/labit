@@ -128,6 +128,8 @@ class testimonials(models.Model):
     
     name = models.CharField(max_length=100)  # Field for time slots
     description = models.CharField(max_length=500)  # Field for time slots
+    rating = models.DecimalField(max_digits=3, decimal_places=1, null = True, blank = True)
+    created_at = models.DateTimeField(auto_now_add=True)
     
 
 

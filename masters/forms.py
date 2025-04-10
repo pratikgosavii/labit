@@ -81,6 +81,8 @@ class testimonials_Form(forms.ModelForm):
             'name': forms.TextInput(attrs={
                 'class': 'form-control', 'id': 'name'
             }),
+
+            'rating': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.1'}),
           
             'description': forms.TextInput(attrs={
                 'class': 'form-control', 'id': 'price'
@@ -183,7 +185,7 @@ class coupon_Form(forms.ModelForm):
         fields = '__all__'  # Include all fields
         widgets = {
             'code': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Coupon Code'}),
-            'title': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Title'}),
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Title'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter Coupon Code'}),
             'discount_percentage': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'discount_amount': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),

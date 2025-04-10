@@ -737,6 +737,8 @@ def get_testimonials(request):
         temp = {
             "id": testimonial.id,
             "name": testimonial.name,
+            "rating": testimonial.rating,
+            "created_at": testimonial.created_at,
             "description": testimonial.description,
         }
         response_data.append(temp)
